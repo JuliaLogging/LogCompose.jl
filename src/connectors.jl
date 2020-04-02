@@ -54,8 +54,8 @@ function logcompose(::Type{LogRoller.RollingLogger}, config::Dict{String,Any}, l
     @assert !isempty(filename)
 
     level = log_min_level(logger_config, "Info")
-    sizelimit = parse(Int, get(logger_config, "sizelimit", "10240000"))
-    nfiles = parse(Int, get(logger_config, "nfiles", "5"))
+    sizelimit = get(logger_config, "sizelimit", 10240000)
+    nfiles = get(logger_config, "nfiles", 5)
     timestamp_identifier = Symbol(get(logger_config, "timestamp_identifier", "time"))
 
     LogRoller.RollingLogger(filename, sizelimit, nfiles, level; timestamp_identifier=timestamp_identifier)
