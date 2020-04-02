@@ -1,0 +1,41 @@
+[loggers.default]
+type = "Logging.SimpleLogger"
+# min_level = "Debug"                   # Debug, Info (default) or Error
+stream = "/tmp/default.log"             # stdout (default), stderr or a filepath
+
+[loggers.file]
+type = "LogRoller.RollingLogger"
+# sizelimit = 10240000
+# nfiles = 5
+# min_level = "Debug"                   # Debug, Info (default) or Error
+# timestamp_identifier = "time"
+
+[loggers.syslog]
+type = "SyslogLogging.SyslogLogger"
+# min_level = "Info"                      # default is Info
+# facility = "user"                       # one of the facility types listed in Syslogs.jl (default is user)
+# server_type = "tcp"                     # tcp or udp or local (default)
+# server_host = 
+# server_port =
+# lock = false                            # whether to lock the syslog facility while logging
+
+# [loggers.stackdriver]
+# type = "StackDriver.StackdriverLogger"
+# min_level = "Info"                      # default is Info
+# project_name =
+# log_name =
+# key_file_path =
+# access_token =
+
+[loggers.file.testapp]
+filename = "/tmp/testapp.log"
+
+[loggers.syslog.testapp]
+identity = "testapp"
+
+[loggers.stackdriver.testapp]
+log_name = "testapp"
+
+[loggers.testapp]
+type = "LoggingExtras.TeeLogger"
+destinations = ["file.testapp", "syslog.testapp"]

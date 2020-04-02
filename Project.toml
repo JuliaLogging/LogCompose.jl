@@ -1,0 +1,27 @@
+name = "LogCompose"
+uuid = "8416b438-731e-11ea-2421-05f642269042"
+keywords = ["configure", "compose", "logging", "logger"]
+authors = ["tan <tanmaykm@gmail.com>"]
+license = "MIT"
+desc = "Compose loggers and logger ensembles declaratively using configuration files"
+version = "0.1.0"
+
+[deps]
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+Sockets = "6462fe0b-24de-5631-8697-dd941f90decc"
+SyslogLogging = "0c4b0c42-68ec-11ea-3bc9-e7fb6e00ea0f"
+LogRoller = "c41e01d8-14e5-11ea-185b-e7eabed7be4b"
+LoggingExtras = "e6f89c97-d47a-5376-807f-9c37f3926c36"
+
+[compat]
+julia = "1"
+SyslogLogging = "0.1"
+LoggingExtras = "0.4"
+LogRoller = "0.2"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
