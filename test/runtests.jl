@@ -12,6 +12,7 @@ function test()
             @info("testdefault")
         end
         @test isfile(default_logfile)
+        close(logger.stream)
     end
 
     let logger = LogCompose.logger(config, "file.testapp"; section="loggers")
