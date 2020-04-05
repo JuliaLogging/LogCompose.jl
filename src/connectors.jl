@@ -1,7 +1,7 @@
 module Connectors
 
 using ..LogCompose
-import ..LogCompose: logcompose, log_min_level
+import ..LogCompose: logcompose, log_min_level, log_assumed_level
 
 using Logging, LogRoller, SyslogLogging, LoggingExtras, Sockets
 
@@ -40,10 +40,10 @@ function logcompose(::Type{SyslogLogging.SyslogLogger}, config::Dict{String,Any}
     if (server_type == "tcp") || (server_type == "udp")
         kwargs[:tcp] = (server_type == "tcp")
         if haskey(logger_config, "server_host")
-            kwargs[:host] = Sockets.IPv4(logger_config["server_host"])
+            kwargs[:host] = logger_config["server_host"]
         end
         if haskey(logger_config, "server_port")
-            kwargs[:port] = parse(Int, logger_config["server_port"])
+            kwargs[:port] = logger_config["server_port"]
         end
     end
     SyslogLogging.SyslogLogger(ident, level; kwargs...)
@@ -59,6 +59,18 @@ function logcompose(::Type{LogRoller.RollingLogger}, config::Dict{String,Any}, l
     timestamp_identifier = Symbol(get(logger_config, "timestamp_identifier", "time"))
 
     LogRoller.RollingLogger(filename, sizelimit, nfiles, level; timestamp_identifier=timestamp_identifier)
+end
+
+function logcompose(::typeof(LogRoller.RollingFileWriterTee), config::Dict{String,Any}, logger_config::Dict{String,Any})
+    filename = String(strip(logger_config["filename"]))
+    @assert !isempty(filename)
+
+    level = log_assumed_level(logger_config, "Info")
+    sizelimit = get(logger_config, "sizelimit", 10240000)
+    nfiles = get(logger_config, "nfiles", 5)
+    destination_name = logger_config["destination"]
+    destination = LogCompose.logger(config, destination_name)
+    LogRoller.RollingFileWriterTee(filename, sizelimit, nfiles, destination, level)
 end
 
 function logcompose(::Type{LoggingExtras.TeeLogger}, config::Dict{String,Any}, logger_config::Dict{String,Any})
