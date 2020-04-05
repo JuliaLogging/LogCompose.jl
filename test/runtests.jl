@@ -4,7 +4,9 @@ function test()
     config = joinpath(@__DIR__, "testapp.toml")
     default_logfile = "/tmp/default.log"
     rotated_logfile = "/tmp/testapp.log"
+    rotated_tee_logfile = "/tmp/testapptee.log"
     rm(rotated_logfile; force=true)
+    rm(rotated_tee_logfile; force=true)
     rm(default_logfile; force=true)
 
     let logger = LogCompose.logger(config, "default"; section="loggers")
@@ -34,12 +36,22 @@ function test()
         end
     end
 
+    let logger = LogCompose.logger(config, "testapptee"; section="loggers")
+        julia = joinpath(Sys.BINDIR, "julia")
+        cmd = pipeline(`$julia -e 'println("testteefilewriter"); flush(stdout)'`; stdout=logger, stderr=logger)
+        run(cmd)
+    end
+
     log_file_contents = readlines(default_logfile)
     @test findfirst("testdefault", log_file_contents[1]) !== nothing
 
     log_file_contents = readlines(rotated_logfile)
     @test findfirst("testroller", log_file_contents[1]) !== nothing
     @test findfirst("testtee", log_file_contents[3]) !== nothing
+    @test findfirst("testteefilewriter", log_file_contents[5]) !== nothing
+
+    log_file_contents = readlines(rotated_tee_logfile)
+    @test "testteefilewriter" == log_file_contents[1]
 end
 
 test()

@@ -39,3 +39,11 @@ log_name = "testapp"
 [loggers.testapp]
 type = "LoggingExtras.TeeLogger"
 destinations = ["file.testapp", "syslog.testapp"]
+
+[loggers.testapptee]
+type = "LogRoller.RollingFileWriterTee"
+destination = "file.testapp"
+filename = "/tmp/testapptee.log"
+# sizelimit = 10240000
+# nfiles = 5
+# assumed_level = "Debug"                 # Debug, Info (default) or Error
