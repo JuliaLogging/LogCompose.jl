@@ -96,6 +96,7 @@ LogCompose supports the following types of loggers at the moment:
 - LoggingExtras.TeeLogger
 - LogRoller.RollingLogger
 - LogRoler.RollingFileWriterTee
+- LogRoller.RollingFileWriter
 - SyslogLogging.SyslogLogger
 
 ### Plugging in other Loggers

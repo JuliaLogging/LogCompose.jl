@@ -73,6 +73,16 @@ function logcompose(::typeof(LogRoller.RollingFileWriterTee), config::Dict{Strin
     LogRoller.RollingFileWriterTee(filename, sizelimit, nfiles, destination, level)
 end
 
+function logcompose(::typeof(LogRoller.RollingFileWriter), config::Dict{String,Any}, logger_config::Dict{String,Any})
+    filename = String(strip(logger_config["filename"]))
+    @assert !isempty(filename)
+
+    level = log_assumed_level(logger_config, "Info")
+    sizelimit = get(logger_config, "sizelimit", 10240000)
+    nfiles = get(logger_config, "nfiles", 5)
+    LogRoller.RollingFileWriter(filename, sizelimit, nfiles)
+end
+
 function logcompose(::Type{LoggingExtras.TeeLogger}, config::Dict{String,Any}, logger_config::Dict{String,Any})
     destinations = [LogCompose.logger(config, dest) for dest in logger_config["destinations"]]
     LoggingExtras.TeeLogger(destinations...)
