@@ -47,3 +47,10 @@ filename = "/tmp/testapptee.log"
 # sizelimit = 10240000
 # nfiles = 5
 # assumed_level = "Debug"                 # Debug, Info (default) or Error
+
+[loggers.plainfile]
+type = "LogRoller.RollingFileWriter"
+filename = "/tmp/testplain.log"
+# sizelimit = 10240000
+# nfiles = 5
+# assumed_level = "Debug"                 # Debug, Info (default) or Error
