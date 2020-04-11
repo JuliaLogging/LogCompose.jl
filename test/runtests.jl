@@ -38,6 +38,14 @@ function test()
         end
     end
 
+    invalid_config = Dict{String,Any}(
+        "invalid" => Dict{String,Any}(
+            "type" => "UnknownModule.UnknownLogger"
+        )
+    )
+    @test_throws ErrorException LogCompose.logger(invalid_config, "invalid")
+    @test_throws ErrorException LogCompose.logcompose(String, invalid_config, invalid_config)
+
     try
         rm(simple_logfile; force=true)
     catch ex

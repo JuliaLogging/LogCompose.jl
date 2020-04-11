@@ -2,7 +2,7 @@ module Connectors
 
 using Logging
 using ..LogCompose
-import ..LogCompose: logcompose, log_min_level, log_assumed_level
+import ..LogCompose: logcompose, log_min_level
 
 #--------------------------------------------------------------------
 # The connectors for individual logger implementations should ideally

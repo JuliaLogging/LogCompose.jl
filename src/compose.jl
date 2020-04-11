@@ -65,7 +65,6 @@ function logger(config::Dict{String,Any}, loggername::Vector)
     logcompose(loggertype, config, loggercfg)
 end
 
-logcompose(::Type{T}, config::Dict{String,Any}, logger_config::Dict{String,Any}) where {T} = @error("logcompose not implemented for type $T")
+logcompose(::Type{T}, config::Dict{String,Any}, logger_config::Dict{String,Any}) where {T} = error("logcompose not implemented for type $T")
 
 log_min_level(logger_config::Dict{String,Any}, default::String="Info") = getproperty(Logging, Symbol(get(logger_config, "min_level", default)))
-log_assumed_level(logger_config::Dict{String,Any}, default::String="Info") = getproperty(Logging, Symbol(get(logger_config, "assumed_level", default)))
