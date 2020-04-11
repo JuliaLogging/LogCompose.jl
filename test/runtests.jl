@@ -38,7 +38,11 @@ function test()
         end
     end
 
-    rm(simple_logfile; force=true)
+    try
+        rm(simple_logfile; force=true)
+    catch ex
+        # ignore (occasionally fails with resource busy exception on Windows, because logger has not been gc'd yet)
+    end
 end
 
 test()

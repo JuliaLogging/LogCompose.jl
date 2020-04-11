@@ -1,6 +1,7 @@
 # LogCompose
 
 [![Build Status](https://travis-ci.org/tanmaykm/LogCompose.jl.png)](https://travis-ci.org/tanmaykm/LogCompose.jl) 
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/tanmaykm/LogCompose.jl?branch=master&svg=true)](https://ci.appveyor.com/project/tanmaykm/logroller-jl/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/tanmaykm/LogCompose.jl/badge.svg?branch=master)](https://coveralls.io/github/tanmaykm/LogCompose.jl?branch=master)
 
 Provides a way to specify hierarchical logging configuration in a file.
