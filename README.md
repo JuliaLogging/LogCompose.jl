@@ -7,10 +7,63 @@ Provides a way to specify hierarchical logging configuration in a file.
 
 Configuration file is in the form of a TOML file. Configuration sections are named,
 with each section specifying a logger type and parameters needed for its construction.
-Sections inherit parameter values from preceeding sectiona and can override them as well.
+Sections inherit parameter values from preceeding sections and can override them as well.
 Loggers can be constructed by providing the name of a section.
 
-### Example configuration
+[Here](example.toml) is what a configuration that allows logging to several types of loggers may look like.
+
+## Plugging in a Logger
+
+Support for a logger can be added by providing an implementation of `LogCompose.logcompose` for the target logger type.
+The implementation needs to be of the following form:
+
+```julia
+function LogCompose.logcompose(::Type{MyLoggerType},
+        config::Dict{String,Any},           # config: the entire logging configuration file
+        logger_config::Dict{String,Any})    # logger_config: configuration relevant for the
+                                            #      section specified to `LogCompose.logger`
+                                            #      with the hierarchy flattened out
+    # provides support for MyLoggerType in LogCompose
+end
+```
+
+For complete examples, refer to any of the existing implementations listed below.
+
+## Loggers Supported
+
+LogCompose has in-built support for the loggers provided in the stdlib logging package.
+They are listed below with example configuration sections illustrating parameters they accept.
+
+- Logging.SimpleLogger
+    ```
+    [loggers.simple]
+    type = "Logging.SimpleLogger"
+    # min_level = "Debug"             # Debug, Info (default) or Error
+    stream = "simple.log"             # file to log to
+    ```
+- Logging.ConsoleLogger
+    ```
+    [loggers.console]
+    type = "Logging.ConsoleLogger"
+    # min_level = "Debug"             # Debug, Info (default) or Error
+    stream = "stdout"                 # stdout (default), stderr or a filepath
+    ```
+- Logging.NullLogger
+    ```
+    [loggers.null]
+    type = "Logging.NullLogger"
+    ```
+
+There are external packages that provide support for a few other types of loggers as well:
+
+- LoggingExtras: [LoggingExtrasCompose.jl](https://github.com/tanmaykm/LoggingExtrasCompose.jl)
+- LogRoller: [LogRollerCompose.jl](https://github.com/tanmaykm/LogRollerCompose.jl)
+- SyslogLogging: [SyslogLoggingCompose.jl](https://github.com/tanmaykm/SyslogLoggingCompose.jl)
+
+
+## Examples
+
+Here is an example configuration using multiple logger types, from different logging packages.
 
 ```toml
 [file]
@@ -46,10 +99,16 @@ type = "LoggingExtras.TeeLogger"
 destinations = ["file.testapp2", "syslog.testapp2"]
 ```
 
-### Example usage
+And below is a snippet of Julia code that make use of this configuration:
 
 ```julia
-julia> using LogCompose, Logging, LogRoller, SyslogLogging, LoggingExtras
+julia> using LogCompose, Logging
+
+julia> using LogRoller, LogRollerCompose
+
+julia> using SyslogLogging, SyslogLoggingCompose
+
+julia> using LoggingExtras, LoggingExtrasCompose
 
 julia> logger1 = LogCompose.logger("testconfig.toml", "testapp1");
 
@@ -87,30 +146,3 @@ shell> cat /tmp/testapp2.log
 └ @ Main REPL[15]:2
 
 ```
-
-### Loggers Supported
-
-LogCompose supports the following types of loggers at the moment:
-
-- Logging.SimpleLogger
-- LoggingExtras.TeeLogger
-- LogRoller.RollingLogger
-- LogRoler.RollingFileWriterTee
-- LogRoller.RollingFileWriter
-- SyslogLogging.SyslogLogger
-
-### Plugging in other Loggers
-
-Support for a new logger can be added by providing an implementation of `LogCompose.logcompose` for the target logger type.
-This can be done in user code or in a package other than LogCompose. The implementation needs to be of the following form:
-
-```julia
-function LogCompose.logcompose(::Type{MyLoggerType},
-        config::Dict{String,Any},           # config: the entire logging configuration file
-        logger_config::Dict{String,Any})    # logger_config: configuration relevant for the
-                                            #      section specified to `LogCompose.logger`
-                                            #      with the hierarchy flattened out
-    # provides support for MyLoggerType in LogCompose
-end
-```
-
