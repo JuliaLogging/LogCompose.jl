@@ -16,9 +16,9 @@ matrix:
 notifications:
   email: false
 # uncomment the following lines to override the default test script
-script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia --project -e 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/tanmaykm/SyslogLogging.jl", rev="master")); Pkg.build(); Pkg.test(; coverage=true)';
+#script:
+#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+#  - julia --project -e 'using Pkg; Pkg.build(); Pkg.test(; coverage=true)';
 after_success:
   # push coverage results to Coveralls
   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())';
