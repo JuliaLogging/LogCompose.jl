@@ -4,7 +4,7 @@ keywords = ["configure", "compose", "logging", "logger"]
 authors = ["Tanmay Mohapatra <tanmaykm@gmail.com>"]
 license = "MIT"
 desc = "Compose loggers and logger ensembles declaratively using configuration files"
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
