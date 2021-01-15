@@ -7,6 +7,9 @@ stream = "simple.log"                   # stdout (default), stderr or a filepath
 type = "Logging.ConsoleLogger"
 # min_level = "Debug"                   # Debug, Info (default) or Error
 stream = "stdout"                       # stdout (default), stderr or a filepath
+color = true                            # force color output, even to non-tty
+# show_limited = false                  # disable limited output
+displaysize = [3, 50]                   # Set display size for formatting
 
 [loggers.null]
 type = "Logging.NullLogger"

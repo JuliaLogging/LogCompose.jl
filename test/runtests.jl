@@ -22,13 +22,19 @@ function test()
             let logger = LogCompose.logger(config, "console"; section="loggers")
                 with_logger(logger) do
                     @info("testconsole")
+                    @info("testconsole2", a=[111,222,333])
                 end
                 flush(logger.stream)
             end
         end
         close(writer)
-        log_file_contents = readlines(Base.pipe_reader(pipe))
-        @test findfirst("testconsole", log_file_contents[1]) !== nothing
+        log_file_contents = String(read(Base.pipe_reader(pipe)))
+        @test findfirst("testconsole", log_file_contents) !== nothing
+        @test findfirst("testconsole2", log_file_contents) !== nothing
+        # setting displaysize limits output
+        @test findfirst("111", log_file_contents) === nothing
+        # ANSI color codes were enabled
+        @test findfirst("\e", log_file_contents) !== nothing
         close(pipe)
     end
 
