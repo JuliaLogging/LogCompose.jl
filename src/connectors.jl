@@ -40,10 +40,10 @@ function logcompose(::Type{Logging.ConsoleLogger}, config::Dict{String,Any}, log
 
     displaysize = get(logger_config, "displaysize", nothing)
     if displaysize !== nothing
-        if !(displaysize isa AbstractVector{Int}) || length(displaysize) != 2
+        if !(displaysize isa AbstractVector) || length(displaysize) != 2
             error("Expected [height,width] but got displaysize=$displaysize")
         end
-        stream = IOContext(stream, :displaysize=>Tuple(displaysize))
+        stream = IOContext(stream, :displaysize=>Tuple(convert(Vector{Int},displaysize)))
     end
 
     show_limited = get(logger_config, "show_limited", true)
