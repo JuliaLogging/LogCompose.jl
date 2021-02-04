@@ -1,8 +1,8 @@
 # LogCompose
 
-[![Build Status](https://travis-ci.org/tanmaykm/LogCompose.jl.png)](https://travis-ci.org/tanmaykm/LogCompose.jl) 
+[![Build Status](https://github.com/tanmaykm/LogCompose.jl/workflows/CI/badge.svg)](https://github.com/tanmaykm/LogCompose.jl/actions?query=workflow%3ACI+branch%3Amaster)
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/tanmaykm/LogCompose.jl?branch=master&svg=true)](https://ci.appveyor.com/project/tanmaykm/logroller-jl/branch/master)
-[![Coverage Status](https://coveralls.io/repos/github/tanmaykm/LogCompose.jl/badge.svg?branch=master)](https://coveralls.io/github/tanmaykm/LogCompose.jl?branch=master)
+[![codecov.io](http://codecov.io/github/tanmaykm/LogCompose.jl/coverage.svg?branch=master)](http://codecov.io/github/tanmaykm/LogCompose.jl?branch=master)
 
 Provides a way to specify hierarchical logging configuration in a file.
 
@@ -61,6 +61,18 @@ There are external packages that provide support for a few other types of logger
 - LogRoller: [LogRollerCompose.jl](https://github.com/tanmaykm/LogRollerCompose.jl)
 - SyslogLogging: [SyslogLoggingCompose.jl](https://github.com/tanmaykm/SyslogLoggingCompose.jl)
 
+For loggers supplied by external packages, LogCompose looks for the logger implementation type
+(the one mentioned in `type` configuration attribute) in the `Main` module by default. But if
+your code imports the external loggers within your module instead of the Main module, then the
+module name where the logger type can be found must be specified in the (otherwise optional)
+`topmodule` configuration parameter. E.g.:
+
+```
+[loggers.rollinglog]
+type = "LogRoller.RollingFileLogger"
+topmodule = "MyModule"
+...
+```
 
 ## Examples
 
