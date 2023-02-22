@@ -47,7 +47,7 @@ function logcompose(::Type{Logging.ConsoleLogger}, config::Dict{String,Any}, log
     end
 
     show_limited = get(logger_config, "show_limited", true)
-    color isa Bool || error("Expected boolean but got show_limited=$show_limited")
+    show_limited isa Bool || error("Expected boolean but got show_limited=$show_limited")
 
     Logging.ConsoleLogger(stream, level; show_limited=show_limited)
 end
