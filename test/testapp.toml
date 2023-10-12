@@ -13,3 +13,19 @@ displaysize = [3, 50]                   # Set display size for formatting
 
 [loggers.null]
 type = "Logging.NullLogger"
+
+[loggers.file1]
+type = "LoggingExtras.FileLogger"
+filename = "testapp1.log"
+append = true                   # file open mode (default: false)
+flush = true                    # flush after logging (default: true)
+
+[loggers.file2]
+type = "LoggingExtras.FileLogger"
+filename = "testapp2.log"
+append = true
+flush = true
+
+[loggers.tee]
+type = "LoggingExtras.TeeLogger"
+destinations = ["file1", "file2"]
