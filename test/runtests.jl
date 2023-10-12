@@ -1,4 +1,4 @@
-using LogCompose, Test, Logging
+using LogCompose, Test, Logging, LoggingExtras
 
 function test()
     config = joinpath(@__DIR__, "testapp.toml")
@@ -52,8 +52,44 @@ function test()
     @test_throws ErrorException LogCompose.logger(invalid_config, "invalid")
     @test_throws ErrorException LogCompose.logcompose(String, invalid_config, invalid_config)
 
+    file1 = "testapp1.log"
+    file2 = "testapp2.log"
+    rm(file1; force=true)
+    rm(file2; force=true)
+
+    let logger = LogCompose.logger(config, "file1"; section="loggers")
+        with_logger(logger) do
+            @info("testfile1")
+        end
+    end
+
+    let logger = LogCompose.logger(config, "file2"; section="loggers")
+        with_logger(logger) do
+            @info("testfile2")
+        end
+    end
+
+    let logger = LogCompose.logger(config, "tee"; section="loggers")
+        with_logger(logger) do
+            @info("testtee")
+        end
+    end
+
+    @test isfile(file1)
+    @test isfile(file2)
+
+    log_file_contents = readlines(file1)
+    @test findfirst("testfile1", log_file_contents[1]) !== nothing
+    @test findfirst("testtee", log_file_contents[3]) !== nothing
+
+    log_file_contents = readlines(file2)
+    @test findfirst("testfile2", log_file_contents[1]) !== nothing
+    @test findfirst("testtee", log_file_contents[3]) !== nothing
+
     try
         rm(simple_logfile; force=true)
+        rm(file1; force=true)
+        rm(file2; force=true)
     catch ex
         # ignore (occasionally fails with resource busy exception on Windows, because logger has not been gc'd yet)
     end
